@@ -1,6 +1,6 @@
 import sys
 import os
-import pandas as pd # Make sure pandas is imported
+import pandas as pd 
 
 # --- CRITICAL WINDOWS FIX ---
 os.environ['PYSPARK_PYTHON'] = sys.executable
@@ -27,6 +27,12 @@ def main():
     metros = all_places.filter(F.col("population") >= METRO_POPULATION_THRESHOLD)
     metros = calculate_metro_radius(metros)
     
+    # Prepare metros for union (add missing columns so they match the structure)
+    metros_output = metros.withColumn("metro_id", F.col("geonameid")) \
+                          .withColumn("metro_name", F.col("name")) \
+                          .withColumn("distance_km", F.lit(0.0)) \
+                          .withColumn("impact", F.lit(1.0))
+    
     metro_count = metros.count()
     print(f" -> Found {metro_count} Metropolises.")
     metros.select("name", "population", "radius_km").show(5, truncate=False)
@@ -45,26 +51,24 @@ def main():
                    .withColumn("distance_km", F.lit(None)) \
                    .withColumn("impact", F.lit(0.0))
     
-    # 6. Combine
-    final_output = matched.unionByName(orphans, allowMissingColumns=True)
+    # 6. Combine ALL Three Parts (Matched + Orphans + METROS)
+    final_output = matched.unionByName(orphans, allowMissingColumns=True) \
+                          .unionByName(metros_output, allowMissingColumns=True)
     
-    # --- STEP 4: SAVE without winutils ---
+    # --- STEP 4: SAVE (Pandas Way) ---
     output_dir = "output/simulation_data"
     output_file = f"{output_dir}/results.csv"
     
     print(f"Step 4: Saving results to {output_file}...")
     
-    # Create directory if not exists
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
         
-    # CONVERT TO PANDAS -> SAVE TO CSV
-    # bypasses the Hadoop/WinUtils error 
     pdf = final_output.toPandas()
     pdf.to_csv(output_file, index=False)
     
     print(f" -> Successfully saved {len(pdf)} rows.")
-    print("\n✅ Simulation Complete. Run 'streamlit run app.py' to visualize.")
+    print("\n✅ Simulation Complete. Run 'streamlit run app.py' to visualize the results!")
     spark.stop()
 
 if __name__ == "__main__":
