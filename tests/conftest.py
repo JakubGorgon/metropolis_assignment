@@ -1,3 +1,7 @@
+"""
+Pytest configuration and shared fixtures.
+Sets up the SparkSession fixture used across integration tests.
+"""
 import pytest
 import sys
 import os

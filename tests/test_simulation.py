@@ -1,3 +1,7 @@
+"""
+Unit tests for the Simulation module.
+Verifies physics calculations, snowball effects, radius logic, and determining winners.
+"""
 import pytest
 import pandas as pd
 import numpy as np

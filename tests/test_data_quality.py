@@ -1,3 +1,7 @@
+"""
+Integration tests for Data Quality.
+Uses Great Expectations and custom logic to verify dataset integrity and 'Shield' efficacy.
+"""
 import pytest
 import os
 import pyspark.sql.functions as F

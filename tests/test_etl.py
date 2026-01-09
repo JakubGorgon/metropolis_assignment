@@ -1,3 +1,7 @@
+"""
+Unit tests for the ETL module.
+Verifies strict filtering, schema adherence, and data cleaning logic.
+"""
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType

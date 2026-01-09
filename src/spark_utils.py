@@ -1,3 +1,7 @@
+"""
+Utilities for managing Spark sessions.
+Includes specific configurations for stability in Windows environments.
+"""
 from pyspark.sql import SparkSession
 import os
 import sys

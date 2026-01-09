@@ -1,3 +1,7 @@
+"""
+Entry point for the data pipeline. 
+Executes the ETL process to clean raw data using Spark and export it for the dashboard.
+"""
 import sys
 import os
 import pandas as pd

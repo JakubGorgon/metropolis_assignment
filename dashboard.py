@@ -1,3 +1,7 @@
+"""
+Streamlit application for the Metropolis Gravity Simulator.
+Visualizes the recursive city capture simulation on an interactive map.
+"""
 import streamlit as st
 import pandas as pd
 import numpy as np

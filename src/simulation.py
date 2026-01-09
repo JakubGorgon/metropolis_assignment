@@ -1,3 +1,7 @@
+"""
+Physics and Simulation engine.
+Contains vectorized Haversine calculations (NumPy) and the iterative gravity model logic.
+"""
 import numpy as np
 import pandas as pd
 from src.config import METRO_POP_CONSTANT, METRO_POWER_CONSTANT, EARTH_RADIUS_KM

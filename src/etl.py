@@ -1,3 +1,7 @@
+"""
+Core ETL logic.
+Handles data loading, strict filtering of inhabited places, and 'Shield' logic for administrative districts.
+"""
 from pyspark.sql import functions as F
 from pyspark.sql.window import Window
 from src.config import SCHEMA, CITIES_WITH_POWIAT_RIGHTS, VALID_CITY_CODES

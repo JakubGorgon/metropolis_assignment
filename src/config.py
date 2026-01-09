@@ -1,3 +1,7 @@
+"""
+Configuration constants and schema definitions.
+Contains physics parameters, file schemas, and reference lists for the project.
+"""
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType, DoubleType
 
 # --- PHYSICS CONSTANTS ---
