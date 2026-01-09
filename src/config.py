@@ -15,7 +15,7 @@ MAX_METRO_CITY_RADIUS = 90.0
 # --- DATA CLEANING ---
 VALID_CITY_CODES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLL', 'PPLF']
 
-# Kept for reference, though filtering logic now relies strictly on feature codes
+# Official list of cities with Powiat rights
 CITIES_WITH_POWIAT_RIGHTS = [
     "Jelenia Góra", "Legnica", "Wałbrzych", "Wrocław", 
     "Bydgoszcz", "Grudziądz", "Toruń", "Włocławek", 

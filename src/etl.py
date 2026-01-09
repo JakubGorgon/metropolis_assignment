@@ -11,16 +11,15 @@ def load_and_filter_data(spark, file_path):
     # 1. Load Raw
     df = spark.read.csv(file_path, sep="\t", header=False, schema=SCHEMA)
     
-    # 2. Basic Filter + VALID_CITY_CODES Enforcement
-    # We strictly allow only codes defined in "places where people live"
-    # This automatically handles excluding PPLX, PPLQ, etc.
+    # 2. Strict Inhabited Places Filter
+    # Only allow validated Feature Codes for cities/towns/villages.
     basic_df = df.filter(
         (F.col("feature_class") == "P") & 
         (F.col("population") > 0) &
         (F.col("feature_code").isin(VALID_CITY_CODES))
     )
     
-    # 3. BUILD THE SHIELD (Identify Administrative Centers)
+    # 3. Identify Administrative Centers (The Shield Strategy)
     # Strategy: Find the "True" City for each admin region that contains a Powiat City
     potential_cities = basic_df.filter(
         F.col("name").isin(CITIES_WITH_POWIAT_RIGHTS) | 
@@ -38,7 +37,7 @@ def load_and_filter_data(spark, file_path):
                                     F.col("geonameid").alias("shield_id")
                                 )
     
-    # 4. APPLY SHIELD (Native Spark Join)
+    # 4. Apply Shield Strategy
     # Join strategy:
     # - If a row belongs to an admin code that HAS a shield city, it must BE that shield city.
     # - If the admin code has NO shield city, the row is kept (it's a normal town).

@@ -6,7 +6,7 @@ import sys
 import os
 import pandas as pd
 
-# --- CRITICAL WINDOWS FIX ---
+# --- PySpark Windows Environment Fix ---
 os.environ['PYSPARK_PYTHON'] = sys.executable
 os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
 

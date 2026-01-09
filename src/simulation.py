@@ -14,7 +14,7 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
     dlat, dlon = lat2 - lat1, lon2 - lon1
     a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
-    # FIX: Robustness clipping
+    # Numerical stability clip
     a = np.clip(a, 0.0, 1.0)
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
     return EARTH_RADIUS_KM * c
@@ -56,7 +56,7 @@ def run_simulation_step(towns, metros, iteration, min_r, max_r):
     available = towns[towns['metro_id'].isna()].copy()
     if available.empty: return pd.DataFrame()
     
-    # --- OPTIMIZATION START: Numpy Broadcasting instead of Cross Join ---
+    # --- Numpy Broadcasting Optimization ---
     
     # Prepare Coordinates (Radians for Haversine)
     # Shape: (N_Towns, 1, 2) vs (1, M_Metros, 2)
@@ -71,7 +71,7 @@ def run_simulation_step(towns, metros, iteration, min_r, max_r):
     dlat = lat2 - lat1
     dlon = lon2 - lon1
     a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
-    # FIX: Robustness clipping
+    # Numerical stability clip
     a = np.clip(a, 0.0, 1.0)
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
     dist_matrix = EARTH_RADIUS_KM * c  # Shape: (N, M)

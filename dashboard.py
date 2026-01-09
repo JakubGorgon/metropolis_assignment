@@ -1,7 +1,3 @@
-"""
-Streamlit application for the Metropolis Gravity Simulator.
-Visualizes the recursive city capture simulation on an interactive map.
-"""
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -9,16 +5,16 @@ import pydeck as pdk
 import os
 import time
 
-# IMPORT LOCAL LOGIC (From the refactored src/simulation.py)
+# --- LOCAL LOGIC IMPORTS ---
 from src.simulation import calculate_distance, run_simulation_step, initialize_state
 
 # --- PAGE CONFIG ---
 st.set_page_config(layout="wide", page_title="Metropolis Gravity Simulator")
 
-# --- CSS (Comfortable Fit) ---
+# --- CSS Styling ---
 st.markdown("""
 <style>
-    /* 1. Standard Padding */
+    /* Standard Padding */
     .block-container {
         padding-top: 2rem !important; 
         padding-bottom: 1rem !important;
@@ -51,7 +47,7 @@ st.markdown("""
 @st.cache_data
 def load_raw_data():
     file_path = "output/simulation_data/clean_places.csv"
-    # Fallback logic for safety if main.py hasn't been run with new naming yet
+    # Fallback logic for safety
     if not os.path.exists(file_path):
         file_path = "output/simulation_data/results.csv"
 
@@ -90,6 +86,18 @@ def render_map(metros, towns):
     
     orphans = towns[towns['metro_id'].isna()].copy()
     orphans['color'] = [[200, 200, 200, 80]] * len(orphans)
+
+    # --- PREPARE CONNECTION LINES ---
+    connections = pd.DataFrame()
+    if not captured.empty:
+        # We need the Metro (Target) coordinates for every captured town
+        # Prepare a small lookup DF for metros
+        metro_coords = metros[['geonameid', 'latitude', 'longitude']].rename(
+            columns={'geonameid': 'metro_id', 'latitude': 'target_lat', 'longitude': 'target_lon'}
+        )
+        # Merge to get Source (Town) and Target (Metro) in one row
+        connections = pd.merge(captured, metro_coords, on='metro_id')
+    # ----------------------------------------
     
     # Tooltips
     metros['tooltip_impact'] = "N/A (Center)"
@@ -102,19 +110,31 @@ def render_map(metros, towns):
         orphans['tooltip_empire'] = "None"
 
     layers = [
-        # Radius
+        # 1. Radius Areas
         pdk.Layer("ScatterplotLayer", data=metros, get_position='[longitude, latitude]', 
                   get_fill_color=[0,0,0,0], get_line_color='color', get_radius='radius_meters', 
                   stroked=True, filled=True, line_width_min_pixels=2, opacity=0.5, pickable=False),
-        # Orphans (Always Visible)
+        
+        # 2. Connectivity Lines 
+        pdk.Layer("LineLayer", data=connections, 
+                  get_source_position='[longitude, latitude]', 
+                  get_target_position='[target_lon, target_lat]',
+                  get_color='color', 
+                  get_width=2, 
+                  opacity=0.01, # Semi-transparent to avoid clutter
+                  pickable=False),
+
+        # 3. Orphans (Always Visible)
         pdk.Layer("ScatterplotLayer", data=orphans, get_position='[longitude, latitude]', 
                   get_color='color', get_radius=2000, pickable=True, opacity=0.6, 
                   stroked=True, line_width_min_pixels=1, get_line_color=[0,0,0,30]),
-        # Captured
+        
+        # 4. Captured Towns
         pdk.Layer("ScatterplotLayer", data=captured, get_position='[longitude, latitude]', 
                   get_color='color', get_radius=3000, pickable=True, opacity=0.8, 
                   stroked=True, line_width_min_pixels=1, get_line_color=[0,0,0,50]),
-        # Centers
+        
+        # 5. Metropolis Centers
         pdk.Layer("ScatterplotLayer", data=metros, get_position='[longitude, latitude]', 
                   get_color='color', get_radius=9000, pickable=True, stroked=True, 
                   filled=True, line_width_min_pixels=2, get_line_color=[0,0,0,255])
