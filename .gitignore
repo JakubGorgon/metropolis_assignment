@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Spark
+metastore_db/
+derby.log
+
+# VS Code
+.vscode/
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+
+# Project Outputs
+output/

@@ -10,6 +10,8 @@ def calculate_distance(lat1, lon1, lat2, lon2):
     lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
     dlat, dlon = lat2 - lat1, lon2 - lon1
     a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
+    # FIX: Robustness clipping
+    a = np.clip(a, 0.0, 1.0)
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
     return EARTH_RADIUS_KM * c
 
@@ -23,7 +25,7 @@ def initialize_state(raw_df, threshold, min_r, max_r):
     metros['current_pop'] = metros['population']
     metros['added_pop'] = 0
     metros['added_towns'] = 0
-    metros['radius_km'] = min_r + max_r * (1 - np.exp(METRO_POP_CONSTANT * metros['current_pop']))
+    metros['radius_km'] = min_r + (max_r - min_r) * (1 - np.exp(METRO_POP_CONSTANT * metros['current_pop']))
     
     towns['metro_id'] = np.nan
     towns['metro_name'] = None
@@ -42,7 +44,7 @@ def run_simulation_step(towns, metros, iteration, min_r, max_r):
     4. Determines winners.
     """
     # 1. Update Radius (Vectorized)
-    metros['radius_km'] = min_r + max_r * (
+    metros['radius_km'] = min_r + (max_r - min_r) * (
         1 - np.exp(METRO_POP_CONSTANT * metros['current_pop'])
     )
     
@@ -65,6 +67,8 @@ def run_simulation_step(towns, metros, iteration, min_r, max_r):
     dlat = lat2 - lat1
     dlon = lon2 - lon1
     a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
+    # FIX: Robustness clipping
+    a = np.clip(a, 0.0, 1.0)
     c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
     dist_matrix = EARTH_RADIUS_KM * c  # Shape: (N, M)
     

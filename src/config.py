@@ -1,4 +1,4 @@
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType, DoubleType
 
 # --- PHYSICS CONSTANTS ---
 METRO_POPULATION_THRESHOLD = 200000 
@@ -37,8 +37,8 @@ SCHEMA = StructType([
     StructField("name", StringType(), True),
     StructField("asciiname", StringType(), True),
     StructField("alternatenames", StringType(), True),
-    StructField("latitude", FloatType(), True),
-    StructField("longitude", FloatType(), True),
+    StructField("latitude", DoubleType(), True),
+    StructField("longitude", DoubleType(), True),
     StructField("feature_class", StringType(), True),
     StructField("feature_code", StringType(), True),
     StructField("country_code", StringType(), True),

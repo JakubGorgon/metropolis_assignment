@@ -9,18 +9,17 @@ from src.config import METRO_POP_CONSTANT
 def scenario_data():
     """
     Creates a mini-Poland with:
-    1. 'Warsaw' (Giant, 1.7M) at (0,0)
-    2. 'Pruszkow' (Town, 60k) close to Warsaw (0.1 deg away)
-    3. 'Lodz' (Large, 700k) far away (1.0 deg away)
-    4. 'OrphanVille' (Tiny) extremely far away (50 deg away)
+    1. 'Warsaw' (Giant, 1.7M) at (52.2297, 21.0122)
+    2. 'Pruszkow' (Town, 60k) close to Warsaw (approx 15km away)
+    3. 'Lodz' (Large, 700k) far away (approx 120km away)
+    4. 'OrphanVille' (Tiny) extremely far away (0,0)
     """
     raw_data = pd.DataFrame({
         'geonameid': [1, 2, 3, 4],
         'name': ['Warsaw', 'Pruszkow', 'Lodz', 'OrphanVille'],
         'population': [1_700_000, 60_000, 700_000, 100],
-        'latitude':  [52.0, 52.0, 52.0, 0.0],
-        'longitude': [21.0, 21.15, 20.0, 0.0] 
-        # Note: 0.15 deg longitude diff at lat 52 is roughly ~10km
+        'latitude':  [52.2297, 52.1600, 51.7592, 0.0],
+        'longitude': [21.0122, 20.8000, 19.4560, 0.0] 
     })
     return raw_data
 
@@ -77,13 +76,13 @@ def test_snowball_effect_math():
     df = pd.DataFrame({'current_pop': [200_000]})
     
     # Calculate Radius A
-    radius_a = 10 + 90 * (1 - np.exp(METRO_POP_CONSTANT * df.loc[0, 'current_pop']))
+    radius_a = 10 + (90 - 10) * (1 - np.exp(METRO_POP_CONSTANT * df.loc[0, 'current_pop']))
     
     # Snowball: Double the population
     df.loc[0, 'current_pop'] = 400_000
     
     # Calculate Radius B
-    radius_b = 10 + 90 * (1 - np.exp(METRO_POP_CONSTANT * df.loc[0, 'current_pop']))
+    radius_b = 10 + (90 - 10) * (1 - np.exp(METRO_POP_CONSTANT * df.loc[0, 'current_pop']))
     
     # Radius B MUST be significantly larger than Radius A
     assert radius_b > radius_a + 5.0 # It should grow by at least 5km with that pop jump

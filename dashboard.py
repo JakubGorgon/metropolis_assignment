@@ -132,7 +132,7 @@ if raw_data.empty: st.stop()
 # --- SIDEBAR ---
 st.sidebar.title("🎛️ Simulation Controls")
 
-threshold = st.sidebar.number_input("Metropolis Threshold", value=200000, step=10000)
+threshold = st.sidebar.number_input("Metropolis Threshold (population)", value=200000, step=10000)
 min_r, max_r = st.sidebar.slider("Radius Range (km)", 1, 200, (10, 90))
 status_placeholder = st.sidebar.empty()
 run_sim = st.sidebar.button("▶️ START SIMULATION", type="primary")
@@ -148,6 +148,7 @@ map_placeholder = st.empty()
 
 if run_sim:
     curr_metros, curr_towns = seed_metros.copy(), seed_towns.copy()
+    curr_metros['growth_pct'] = 0.0
     stabilized = False # Flag to track completion status
     
     for i in range(1, 20):
