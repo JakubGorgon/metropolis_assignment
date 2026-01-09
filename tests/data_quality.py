@@ -1,6 +1,6 @@
 from src.config import CITIES_WITH_POWIAT_RIGHTS
 from great_expectations.dataset import SparkDFDataset
-from src.logic import load_and_filter_data
+from src.etl import load_and_filter_data
 from src.spark_utils import get_spark_session
 import pyspark.sql.functions as F
 import sys

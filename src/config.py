@@ -1,19 +1,17 @@
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType, FloatType
 
 # --- PHYSICS CONSTANTS ---
-# Population at which a city becomes a "Metropolis" (an Eater)
 METRO_POPULATION_THRESHOLD = 200000 
-
-# Gravity Model Constants (From assignment)
-METRO_CITY_POPULATION_CONSTANT = -1/1443000
+METRO_POP_CONSTANT = -1/1443000
+METRO_POWER_CONSTANT = -1.4
+EARTH_RADIUS_KM = 6371.0
 MIN_METRO_CITY_RADIUS = 10.0
-MAX_METRO_CITY_RADIUS = 100.0 - MIN_METRO_CITY_RADIUS
-METRO_CITY_POWER_CONSTANT = -1.4
+MAX_METRO_CITY_RADIUS = 90.0
 
 # --- DATA CLEANING ---
 VALID_CITY_CODES = ['PPL', 'PPLA', 'PPLA2', 'PPLA3', 'PPLA4', 'PPLC', 'PPLL', 'PPLF']
 
-# MIASTA NA PRAWACH POWIATU W POLSCE (https://pl.wikipedia.org/wiki/Miasto_na_prawach_powiatu)
+# Kept for reference, though filtering logic now relies strictly on feature codes
 CITIES_WITH_POWIAT_RIGHTS = [
     "Jelenia Góra", "Legnica", "Wałbrzych", "Wrocław", 
     "Bydgoszcz", "Grudziądz", "Toruń", "Włocławek", 

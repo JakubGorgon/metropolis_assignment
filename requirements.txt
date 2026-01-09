@@ -7,3 +7,4 @@ matplotlib
 seaborn
 great_expectations<1.0.0
 folium
+pytest
