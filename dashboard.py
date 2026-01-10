@@ -6,7 +6,7 @@ import os
 import time
 
 # --- LOCAL LOGIC IMPORTS ---
-from src.simulation import calculate_distance, run_simulation_step, initialize_state
+from src.simulation import run_simulation_step, initialize_state
 
 # --- PAGE CONFIG ---
 st.set_page_config(layout="wide", page_title="Metropolis Gravity Simulator")
@@ -52,7 +52,7 @@ def load_raw_data():
         file_path = "output/simulation_data/results.csv"
 
     if not os.path.exists(file_path):
-        st.error(f"❌ File not found. Run `python run_etl.py` (or main.py) first.")
+        st.error(f"❌ File not found. Run `python run_etl.py` first.")
         return pd.DataFrame()
     try:
         df = pd.read_csv(file_path)

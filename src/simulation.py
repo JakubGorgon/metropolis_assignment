@@ -6,19 +6,6 @@ import numpy as np
 import pandas as pd
 from src.config import METRO_POP_CONSTANT, METRO_POWER_CONSTANT, EARTH_RADIUS_KM
 
-def calculate_distance(lat1, lon1, lat2, lon2):
-    """
-    Vectorized Haversine Formula.
-    Expects inputs in degrees. Returns km.
-    """
-    lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
-    dlat, dlon = lat2 - lat1, lon2 - lon1
-    a = np.sin(dlat/2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2)**2
-    # Numerical stability clip
-    a = np.clip(a, 0.0, 1.0)
-    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1-a))
-    return EARTH_RADIUS_KM * c
-
 def initialize_state(raw_df, threshold, min_r, max_r):
     """
     Splits raw data into Metros and Towns based on threshold.
@@ -47,7 +34,7 @@ def run_simulation_step(towns, metros, iteration, min_r, max_r):
     3. Calculates Impact score.
     4. Determines winners.
     """
-    # 1. Update Radius (Vectorized)
+    # 1. Update Radius
     metros['radius_km'] = min_r + (max_r - min_r) * (
         1 - np.exp(METRO_POP_CONSTANT * metros['current_pop'])
     )
@@ -84,7 +71,7 @@ def run_simulation_step(towns, metros, iteration, min_r, max_r):
     
     # Calculate Impact Matrix (Zero where outside radius)
     # impact = exp(C * dist / radius)
-    # We add a small epsilon to radius to avoid division by zero (unlikely but safe)
+    # We add a small epsilon to radius to avoid division by zero 
     with np.errstate(divide='ignore', invalid='ignore'):
         impact_matrix = np.exp(METRO_POWER_CONSTANT * (dist_matrix / radii))
         impact_matrix[~mask] = 0.0 # Strict Cutoff
@@ -115,4 +102,3 @@ def run_simulation_step(towns, metros, iteration, min_r, max_r):
     
     return winners
 
-    # --- OPTIMIZATION END ---
