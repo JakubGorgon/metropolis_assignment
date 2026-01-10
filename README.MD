@@ -97,4 +97,4 @@ python -m pytest tests/
 | **Strict Distances** | **Haversine Formula** used throughout.|
 | **Metropolis Definitions** | Dynamic population threshold in UI. Algorithm iteratively assigns towns to the strongest metro. |
 | **Snowball Effect** | Implemented Iterative Loop where $Population_{t+1} = Population_t + \sum Captured_{towns}$. |
-| **Performance** | **PySpark** for data prep, **NumPy Broadcasting** for $O(1)$ matrix operations in simulation. |
+| **Performance** | **PySpark** for data prep, **NumPy Broadcasting** for matrix operations in simulation. |
