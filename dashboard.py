@@ -187,7 +187,7 @@ if run_sim:
         
         # 3. Check for Stabilization
         if new_captures.empty:
-            status_placeholder.success(f"✅ Stabilized early at Round {i-1}!")
+            status_placeholder.success(f"✅ Stabilized at Round {i-1}!")
             stabilized = True
             break
             
