@@ -62,10 +62,6 @@ Once the data is clean, the physics simulation runs in memory for real-time inte
 
 ## ⚙️ Setup & Usage
 
-### Prerequisites
-*   Python 3.10+
-*   Java 8/11/17 (for PySpark)
-
 ### Installation
 ```bash
 git clone https://github.com/JakubGorgon/metropolis_assignment
