@@ -5,8 +5,8 @@
 ## 📋 Overview
 This project is an algorithmic simulation of **Metropolitan Gravity**, designed to model how major Polish cities (Metropolises) exert influence over surrounding towns based on population mass and distance.
 
-It demonstrates a scalable data engineering approach to:
-1.  **Strict Data Cleaning** (distinguishing true administrative capitals from districts/duplicates).
+It demonstrates an approach to:
+1.  **Data Cleaning** (distinguishing true administrative capitals from districts/duplicates).
 2.  **Geospatial Simulation** (Snowball effect: as cities capture towns, they grow larger and their reach expands).
 3.  **Performance Optimization** (Vectorized NumPy calculations & Spark ETL).
 
@@ -61,10 +61,6 @@ Once the data is clean, the physics simulation runs in memory for real-time inte
 ---
 
 ## ⚙️ Setup & Usage
-
-### Prerequisites
-*   Python 3.10+
-*   Java 8/11/17 (for PySpark)
 
 ### Installation
 ```bash
